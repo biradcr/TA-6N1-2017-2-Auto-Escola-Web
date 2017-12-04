@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="formEdicao">
+        <h:panelGroup rendered="#{controleVeiculo.editando}">
+            <div class="ui-fluid">
+                <p:messages/>
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-20"
+                             layout="grid" styleClass="ui-panelgrid-blank">
+                    <f:facet name="header">
+                        <p:outputLabel value="Edição de Veiculos"/>
+                    </f:facet>
+                    <p:outputLabel for="txtID" value="ID"/>
+                    <p:inputText id="txtID" value="#{controleVeiculo.objeto.id}" 
+                                 size="5" maxlength="5"/>
+                    <p:outputLabel for="txtModelo" value="Modelo"/>
+                    <p:inputText id="txtModelo" value="#{controleVeiculo.objeto.modelo}"
+                                 size="40" maxlength="40"
+                                 required="true"
+                                 requiredMessage="O modelo deve ser informado"
+                                 placeholder="Obrigatório"/>
+                    <p:outputLabel for="txtCor" value="Cor"/>
+                    <p:inputText id="txtCor" value="#{controleVeiculo.objeto.cor}"
+                                 size="40" maxlength="40"
+                                 required="true"
+                                 requiredMessage="A cor deve ser informada"
+                                 placeholder="Obrigatório"/>
+                    <p:outputLabel for="txtPlaca" value="Placa"/>
+                    <p:inputText id="txtPlaca" value="#{controleVeiculo.objeto.placa}"
+                                 size="40" maxlength="40"
+                                 required="true"
+                                 requiredMessage="A placa deve ser informado"
+                                 placeholder="Obrigatório"/>
+                    <p:outputLabel for="cbxMontadora" value="Montadora"/>
+                    <p:selectOneMenu id="cbxMontadora" value="#{controleVeiculo.objeto.montadora}">
+                        <f:selectItem itemLabel="Selecione um registro" noSelectionOption="true"/>
+                        <f:selectItems value="#{controleVeiculo.daoMontadora.listaTodos}"
+                                       var="s"
+                                       itemLabel="#{s.nome}"/>
+                        <f:converter converterId="converterMontadora"/>
+                    </p:selectOneMenu>
+                    
+                    <p:commandButton value="Salvar" icon="ui-icon-disk"
+                                     actionListener="#{controleVeiculo.salvar()}"
+                                     update="formEdicao :formListagem"/>
+                </p:panelGrid>
+            </div>
+            <h:panelGroup id="painelInstrutor">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-13"
+                                 layout="grid" styleClass="ui-panelgrid-blank"
+                                 rendered="#{controleVeiculo.editandoInstrutor}">
+                        <f:facet name="header">
+                            <p:outputLabel value="Edição de instrutor"/>
+                        </f:facet> 
+                        <p:outputLabel for="txtIDInstrutor" value="ID"/>
+                        <p:inputText id="txtIDInstrutor" value="#{controleVeiculo.instrutor.id}"
+                                     size="5" maxlength="5"/>                          
+                        <p:outputLabel for="txtNomeInstrutor" value="Nome"/>
+                        <p:inputText id="txtNomeInstrutor" value="#{controleVeiculo.instrutor.nome}"
+                                       size="50" maxlength="50"
+                                       required="true"/>                                        
+                        <p:outputLabel for="txtEnderecoInstrutor" value="Endereço"/>
+                        <p:inputText id="txtEnderecoInstrutor" value="#{controleVeiculo.instrutor.endereco}"
+                                       size="50" maxlength="50"
+                                       required="true"/>                                        
+                        <p:outputLabel value=""/>
+                        <p:commandButton value="Salvar instrutor" icon="ui-icon-disk"
+                                         actionListener="#{controleVeiculo.salvarInstrutor()}"
+                                         update="@form"
+                                         id="btnSalvarInstrutor"/>                         
+                    </p:panelGrid>                
+                </h:panelGroup>
+            
+            <h:panelGroup id="listagemInstrutor">
+                <h:panelGroup rendered="#{!controleVeiculo.editandoInstrutor}">
+                    <p:commandButton value="Novo instrutor" icon="ui-icon-plus"
+                                     actionListener="#{controleVeiculo.novoInstrutor()}"
+                                     update="listagemInstrutor painelInstrutor"
+                                     id="btnNovoInstrutor"/>                    
+                    <p:dataTable value="#{controleVeiculo.objeto.instrutores}"
+                                 var="col" reflow="true"  rowIndexVar="idx">
+                        <f:facet name="header">
+                            <p:outputLabel value="Instrutores"/>
+                        </f:facet>                       
+                        <p:column headerText="Instrutor">
+                            <p:outputLabel value="#{col.nome}"/>
+                        </p:column>
+                        <p:column headerText="Endereço">
+                            <p:outputLabel value="#{col.endereco}"/>
+                        </p:column>                         
+                        <p:column headerText="Ações">
+                            <div align="center">                                
+                                <p:commandButton icon="ui-icon-pencil"
+                                                 actionListener="#{controleVeiculo.alterarInstrutor(idx)}"
+                                                 process="@this"
+                                                 update="@form"/>                                
+                                <p:commandButton icon="ui-icon-trash"
+                                                 actionListener="#{controleVeiculo.excluirInstrutor(idx)}"
+                                                 process="@this" update="@form"/>
+                            </div>
+                        </p:column>                     
+                    </p:dataTable>
+                </h:panelGroup> 
+            </h:panelGroup>
+        </h:panelGroup>
+    </h:form>
+</html>
+
